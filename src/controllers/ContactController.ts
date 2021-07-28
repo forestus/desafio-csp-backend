@@ -28,5 +28,20 @@ class ContactController {
       throw new AppError(error)
     }
   }
+
+  // Busca uma Postagem armazenada no Banco pelo ID, retorna os dados da Postagem criado e seu relacionamento com status correspondente.
+  async findOne (request: Request, response: Response): Promise<Response> {
+    const { id } = request.params
+    const contactsService = new ContactsServices()
+    try {
+      const contact = await contactsService.findOne(id)
+      return response
+        .status(200).json({
+          ...contact
+        })
+    } catch (error) {
+      throw new AppError(error)
+    }
+  }
 }
 export default new ContactController()
