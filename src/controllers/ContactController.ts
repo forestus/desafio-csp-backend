@@ -44,6 +44,23 @@ class ContactController {
     }
   }
 
+  // Atualiza um Contato ja Existente no Banco com os Dados Informados pelo ID passado como parametro, firstname, lastname, email passados no corpo da requisição,
+  // retorna os dados do Contato atualizado e seu relacionamento com status correspondente.
+  async update (request: Request, response: Response): Promise<Response> {
+    const { id } = request.params
+    const { firstname, lastname, email } = request.body
+    const contactsService = new ContactsServices()
+    try {
+      const contactUpdated = await contactsService.update(id, firstname, lastname, email)
+      return response
+        .status(200).json({
+          ...contactUpdated
+        })
+    } catch (error) {
+      throw new AppError(error)
+    }
+  }
+
   // Exclui um Contato pelo ID passado como parametro, retorna o status correspondente.
   async destroy (request: Request, response: Response): Promise<Response> {
     const { id } = request.params
