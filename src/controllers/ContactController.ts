@@ -29,7 +29,7 @@ class ContactController {
     }
   }
 
-  // Busca uma Postagem armazenada no Banco pelo ID, retorna os dados da Postagem criado e seu relacionamento com status correspondente.
+  // Busca um Contato armazenado no Banco pelo ID, retorna os dados do Contato criado e seu relacionamento com status correspondente.
   async findOne (request: Request, response: Response): Promise<Response> {
     const { id } = request.params
     const contactsService = new ContactsServices()
@@ -39,6 +39,22 @@ class ContactController {
         .status(200).json({
           ...contact
         })
+    } catch (error) {
+      throw new AppError(error)
+    }
+  }
+
+  // Exclui um Contato pelo ID passado como parametro, retorna o status correspondente.
+  async destroy (request: Request, response: Response): Promise<Response> {
+    const { id } = request.params
+    const contactsService = new ContactsServices()
+
+    try {
+      const isDeleted = await contactsService.destroy(id)
+      if (!isDeleted.affected) {
+        throw new AppError('Não foi Deletado!', 500)
+      }
+      return response.sendStatus(200)
     } catch (error) {
       throw new AppError(error)
     }
