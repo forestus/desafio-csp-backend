@@ -76,6 +76,33 @@ class ContactsServices {
     return post
   }
 
+  async update (id: string, firstname: string, lastname: string, email: string): Promise<ContactEntity> {
+    // Busca no banco a Postagem com id da mesma, retorna a Postagem com o usuário que criou a mesma.
+    const contact = await this.contactsRepository.findOne({
+      where: { id },
+      relations: ['phones']
+    })
+    // Se a Postagem não existe, retorna status e mensagem de erro.
+    if (contact == null) {
+      throw new AppError('Nenhuma Postagem Encontrada!', 404)
+    }
+
+    // Tenta salvar no banco o Contato Atualizado, caso falhe retorna o erro pela instancia de erro "AppError" criada.
+    try {
+      // Cria a entidade da Postagem passando o usuário de criação.
+      const postUpdated = this.contactsRepository.create({
+        firstname,
+        lastname,
+        email
+      })
+      // Atualiza a entidade no banco e logo após retorna para o Controller.
+      await this.contactsRepository.update(id, { ...postUpdated })
+      return postUpdated
+    } catch (error) {
+      throw new AppError(error)
+    }
+  }
+
   async destroy (id: string): Promise<DeleteResult> {
     // Busca no banco o Contato com id do mesmo.
     const post = await this.contactsRepository.findOne({ id })
