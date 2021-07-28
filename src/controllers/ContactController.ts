@@ -20,9 +20,13 @@ class ContactController {
 
   // Busca todos os Contatos armazenados no Banco, retorna os dados dos contatos criados e seus relacionamentos em uma Array com status correspondente.
   async findAll (request: Request, response: Response): Promise<Response> {
+    const {
+      names
+      , email
+    } = request.params
     const contactsService = new ContactsServices()
     try {
-      const contacts = await contactsService.findAll()
+      const contacts = await contactsService.findAll(names, email)
       return response.status(200).json(contacts)
     } catch (error) {
       throw new AppError(error)
@@ -52,6 +56,23 @@ class ContactController {
     const contactsService = new ContactsServices()
     try {
       const contactUpdated = await contactsService.update(id, firstname, lastname, email)
+      return response
+        .status(200).json({
+          ...contactUpdated
+        })
+    } catch (error) {
+      throw new AppError(error)
+    }
+  }
+
+  // Atualiza um Telefone ja Existente no Banco com os Dados Informados pelo ID passado como parametro, phones passado no corpo da requisição,
+  // retorna os dados do Contato atualizado e seu relacionamento com status correspondente.
+  async updatePhone (request: Request, response: Response): Promise<Response> {
+    const { id } = request.params
+    const { phone } = request.body
+    const contactsService = new ContactsServices()
+    try {
+      const contactUpdated = await contactsService.updatePhone(id, phone)
       return response
         .status(200).json({
           ...contactUpdated
