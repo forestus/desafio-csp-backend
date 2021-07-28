@@ -57,9 +57,23 @@ class ContactsServices {
     })
     // Se os Contatos não forem encontrados, retorna status e mensagem de erro.
     if (!contacts) {
-      throw new AppError('Nenhuma Postagem Encontrada!', 404)
+      throw new AppError('Nenhum Contato Encontrado!', 404)
     }
     return contacts
+  }
+
+  async findOne (id: string): Promise<ContactEntity> {
+    // Busca no banco o Contato com id do mesmo.
+    const post = await this.contactsRepository.findOne({
+      where: { id: id },
+      relations: ['phones']
+    })
+    // Se o Contato não existe, retorna status e mensagem de erro.
+    if (!post) {
+      throw new AppError('Nenhum Contato Encontrado!', 404)
+    }
+    // Retorna para o Controller.
+    return post
   }
 }
 
