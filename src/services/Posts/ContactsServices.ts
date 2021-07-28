@@ -50,15 +50,26 @@ class ContactsServices {
     }
   }
 
-  async findAll (): Promise<ContactEntity[]> {
-    // Busca no banco todos os Contatos.
+  async findAll (names: string, email: string): Promise<ContactEntity[]> {
+    let firstname, lastname
+    // Caso passe os nomes, Converte os mesmos para usar como filtro.
+    if (names) {
+      [firstname, lastname] = names.trim().split(' ')
+    }
+    // Busca no banco todos os Contatos a partir dos filtros.
     const contacts = await this.contactsRepository.find({
+      where: {
+        firstname: firstname || false,
+        lastname: lastname || false,
+        email: email || false
+      },
       relations: ['phones']
     })
     // Se os Contatos não forem encontrados, retorna status e mensagem de erro.
     if (!contacts) {
       throw new AppError('Nenhum Contato Encontrado!', 404)
     }
+    // retorna os contatos encontrados ao Controller
     return contacts
   }
 
@@ -77,27 +88,54 @@ class ContactsServices {
   }
 
   async update (id: string, firstname: string, lastname: string, email: string): Promise<ContactEntity> {
-    // Busca no banco a Postagem com id da mesma, retorna a Postagem com o usuário que criou a mesma.
+    // Busca no banco o Contato.
     const contact = await this.contactsRepository.findOne({
-      where: { id },
-      relations: ['phones']
+      where: { id }
     })
-    // Se a Postagem não existe, retorna status e mensagem de erro.
+    // Se o Contato não existe, retorna status e mensagem de erro.
     if (contact == null) {
-      throw new AppError('Nenhuma Postagem Encontrada!', 404)
+      throw new AppError('Nenhum Contato Encontrado!', 404)
+    }
+    // Verifica no banco se esse email já existe e caso sim retorna mensagem e erro.
+    const emailAlreadyExists = await this.contactsRepository.findOne({ email })
+    if (emailAlreadyExists) {
+      throw new AppError('Este Email Já Existe!', 409)
     }
 
     // Tenta salvar no banco o Contato Atualizado, caso falhe retorna o erro pela instancia de erro "AppError" criada.
     try {
-      // Cria a entidade da Postagem passando o usuário de criação.
-      const postUpdated = this.contactsRepository.create({
+      // Cria a entidade do Contato.
+      const contactUpdated = this.contactsRepository.create({
         firstname,
         lastname,
         email
       })
       // Atualiza a entidade no banco e logo após retorna para o Controller.
-      await this.contactsRepository.update(id, { ...postUpdated })
-      return postUpdated
+      await this.contactsRepository.update(id, { ...contactUpdated })
+      return contactUpdated
+    } catch (error) {
+      throw new AppError(error)
+    }
+  }
+
+  async updatePhone (id: string, phone: string): Promise<PhoneEntity> {
+    // Busca no banco o Telefone.
+    const phoneAlreadyExists = await this.phonesRepository.findOne({
+      where: { id }, relations: ['contact']
+    })
+    // Se o Telefone não existe, retorna status e mensagem de erro.
+    if (!phoneAlreadyExists) {
+      throw new AppError('Nenhum Telefone Encontrado!', 404)
+    }
+    // Tenta salvar no banco o Telefone Atualizado, caso falhe retorna o erro pela instancia de erro "AppError" criada.
+    try {
+      // Cria a entidade do Telefone.
+      const phoneData = this.phonesRepository.create({
+        phone
+      })
+      // Atualiza a entidade no banco e logo após retorna para o Controller.
+      await this.phonesRepository.update(id, phoneData)
+      return phoneData
     } catch (error) {
       throw new AppError(error)
     }
