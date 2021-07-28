@@ -1,4 +1,4 @@
-import { getCustomRepository, Repository } from 'typeorm'
+import { DeleteResult, getCustomRepository, Repository } from 'typeorm'
 import { ContactsRepository } from '@repositories/ContactsRepository'
 import { PhonesRepository } from '@repositories/PhonesRepository'
 import { ContactEntity } from '@entities/ContactEntity'
@@ -74,6 +74,23 @@ class ContactsServices {
     }
     // Retorna para o Controller.
     return post
+  }
+
+  async destroy (id: string): Promise<DeleteResult> {
+    // Busca no banco o Contato com id do mesmo.
+    const post = await this.contactsRepository.findOne({ id })
+    // Se o Contato não existe, retorna status e mensagem de erro.
+    if (!post) {
+      throw new AppError('Contato não Encontrada!', 404)
+    }
+    // Tenta Excluir no banco o Contato pelo id passado, caso falhe retorna o erro pela instancia de erro "AppError" criada.
+    try {
+      // Apaga a entidade pelo ID passado e logo após retorna as linhas afetadas no banco para o Controller.
+      const deleted = await this.contactsRepository.delete(post.id)
+      return deleted
+    } catch (error) {
+      throw new AppError(error)
+    }
   }
 }
 
