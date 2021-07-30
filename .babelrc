@@ -1,0 +1,45 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "node": "current"
+        }
+      }
+    ],
+    "@babel/preset-typescript"
+  ],
+  "plugins": [
+    [
+      "module-resolver",
+      {
+        "alias": {
+          "@controllers": "./src/controllers",
+          "@database": "./src/database",
+          "@errors": "./src/errors",
+          "@middlewares": "./src/middlewares",
+          "@entities": "./src/entities",
+          "@repositories": "./src/repositories",
+          "@routes": "./src/routes",
+          "@services": "./src/services",
+          "@docs": "./docs/"
+        }
+      }
+    ],
+    "babel-plugin-transform-typescript-metadata",
+    [
+      "@babel/plugin-proposal-decorators",
+      {
+        "legacy": true
+      }
+    ],
+    [
+      "@babel/plugin-proposal-class-properties",
+      {
+        "loose": true
+      }
+    ]
+  ],
+  "ignore": ["**/*.spec.ts"]
+}
