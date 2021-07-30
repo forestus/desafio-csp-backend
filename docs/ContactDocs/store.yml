@@ -1,0 +1,125 @@
+paths:
+  /contacts:
+    post:
+      tags:
+        - 'Contact'
+      summary: Criar Contato.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstname:
+                  type: string
+                  description: Nome do Contato.
+                  example: Guilherme
+                lastname:
+                  type: string
+                  description: Sobrenome do Contato.
+                  example: Maciel
+                email:
+                  type: string
+                  description: Email do Contato.
+                  example: forestus7@gmail.com
+                phones:
+                  type: array
+                  items:
+                    type: string
+                  example:
+                    [
+                      '+5522998975749',
+                    ]
+
+      responses:
+        201:
+          description: Retorna um Contato.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: ID do Contato.
+                    example: 0
+                  firstname:
+                    type: string
+                    description: Nome do Contato.
+                    example: Guilherme
+                  lastname:
+                    type: string
+                    description: Sobrenome do Contato.
+                    example: Maciel
+                  email:
+                    type: string
+                    description: Email do Contato.
+                    example: forestus7@gmail.com
+                  created_at:
+                    type: string
+                    description: Data de criação de cadastro.
+                    example: '2021-07-30T22:56:38.371Z'
+                  updated_at:
+                    type: string
+                    description: Data de atualização do cadastro.
+                    example: '2021-07-30T22:56:38.371Z'
+                  phones:
+                    type: array
+                    items:
+                      allOf:
+                        - type: object
+                          properties:
+                            id:
+                              type: integer
+                              description: ID do Telefone.
+                              example: 0
+                            phone:
+                              type: string
+                              description: Telefone do Contato.
+                              example: "+5522998975749"
+                            created_at:
+                              type: string
+                              description: Data de criação de cadastro.
+                              example: '2021-07-30T22:56:38.371Z'
+                            updated_at:
+                              type: string
+                              description: Data de atualização do cadastro.
+                              example: '2021-07-30T22:56:38.371Z'
+        400:
+          description: Erro de Validação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: array
+                    items:
+                      type: string
+                    example:
+                      [
+                        'Nome Não Informado!',
+                        'Sobrenome Não Informado!',
+                        'Email Não Informado!',
+                        'Telefone Não Informado!',
+                        'E-mail deve ser um email válido',
+                        'Os telefones [0] devem ser um número de telefone válido.',
+                        '`O Parametro passado "${error.value}" não condiz com o tipo Necessário!`'
+                      ]
+        409:
+          description: Erro de Conflito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: array
+                    items:
+                      type: string
+                    example: [
+                      'Este Email de Contato Já Existe!',
+                      'Telefones Repetidos!',
+                      'Telefones Já Existem! "${phoneExists}"'
+                      ]
