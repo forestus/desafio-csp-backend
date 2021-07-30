@@ -1,0 +1,11 @@
+{
+  "apps": [
+    {
+      "name": "backend_nodejs",
+      "script": "./src/index.js",
+      "env_production": {
+        "NODE_ENV": "production"
+      }
+    }
+  ]
+}
