@@ -1,0 +1,75 @@
+paths:
+  /contacts/{names}/{email}:
+    get:
+      tags:
+        - 'Contact'
+      summary: Encontrar Todos os Contatos.
+      responses:
+        200:
+          description: 'Array de Contatos(é possível passar filtro /names com o nome EX: "/Guilherme Maciel" ou "/ /forestus7@gmail.com"  ).'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                    - type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: ID do Contato.
+                          example: 0
+                        firstname:
+                          type: string
+                          description: Nome do Contato.
+                          example: Guilherme
+                        lastname:
+                          type: string
+                          description: Sobrenome do Contato.
+                          example: Maciel
+                        email:
+                          type: string
+                          description: Email do Contato.
+                          example: forestus7@gmail.com
+                        created_at:
+                          type: string
+                          description: Data de criação de cadastro.
+                          example: '2021-07-30T22:56:38.371Z'
+                        updated_at:
+                          type: string
+                          description: Data de atualização do cadastro.
+                          example: '2021-07-30T22:56:38.371Z'
+                        phones:
+                          type: array
+                          items:
+                            allOf:
+                              - type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    description: ID do Telefone.
+                                    example: 0
+                                  phone:
+                                    type: string
+                                    description: Telefone do Contato.
+                                    example: "+5522998975749"
+                                  created_at:
+                                    type: string
+                                    description: Data de criação de cadastro.
+                                    example: '2021-07-30T22:56:38.371Z'
+                                  updated_at:
+                                    type: string
+                                    description: Data de atualização do cadastro.
+                                    example: '2021-07-30T22:56:38.371Z'
+        404:
+          description: Não Encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: array
+                    items:
+                      type: string
+                    example: ['Nenhum Contato Encontrado!']
