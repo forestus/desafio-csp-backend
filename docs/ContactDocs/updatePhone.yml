@@ -1,0 +1,96 @@
+paths:
+  /contacts/{id}:
+    put:
+      tags:
+        - 'Contact'
+      summary: Atualizar um Telefone.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: ID da Postagem.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstname:
+                  type: string
+                  description: Nome do Contato.
+                  example: Guilherme
+                lastname:
+                  type: string
+                  description: Sobrenome do Contato.
+                  example: Maciel
+                email:
+                  type: string
+                  description: Email do Contato.
+                  example: forestus@gmail.com
+      responses:
+        200:
+          description: Contato Atualizado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  firstname:
+                    type: string
+                    description: Nome do Contato.
+                    example: Guilherme
+                  lastname:
+                    type: string
+                    description: Sobrenome do Contato.
+                    example: Maciel
+                  email:
+                    type: string
+                    description: Email do Contato.
+                    example: forestus@gmail.com
+        400:
+          description: Erro de Validação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: array
+                    items:
+                      type: string
+                    example:
+                      [
+                        'ID Não Informado!',
+                        'E-mail deve ser um email válido',
+                        'Os Dados do Contato Não foram Informados!',
+                        '`O Parametro passado "${error.value}" não condiz com o tipo Necessário!`'
+                      ]
+        404:
+          description: Não Encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: array
+                    items:
+                      type: string
+                    example: ['Nenhum Contato Encontrado!']
+        409:
+          description: Erro de Conflito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: array
+                    items:
+                      type: string
+                    example: [
+                      'Este Email de Contato Já Existe!'
+                      ]
