@@ -1,0 +1,17 @@
+{
+  "type": "mysql",
+  "host": "localhost",
+  "port": "3306",
+  "username": "root",
+  "password": "123456",
+  "database": "schedule",
+  "keepConnectionAlive": true,
+  "synchronize": true,
+  "logging": false,
+  "migrations": ["src/database/migrations/*.{js,ts}"],
+  "entities": ["src/entities/*.{js,ts}"],
+  "cli": {
+    "migrationsDir": "src/database/migrations",
+    "entitiesDir": "src/entities"
+  }
+}
