@@ -1,0 +1,17 @@
+{
+    "extends": "standard-with-typescript",
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    },
+    "rules": {
+        "@typescript-eslint/no-throw-literal": 0,
+        "@typescript-eslint/naming-convention": "off",
+        "@typescript-eslint/strict-boolean-expressions": "off",
+        "@typescript-eslint/no-floating-promises": "off",
+        "@typescript-eslint/no-misused-promises": "off",
+        "@typescript-eslint/consistent-type-assertions": "off",
+        "array-callback-return": "off",
+        "prefer-const": "off",
+        "@typescript-eslint/restrict-template-expressions":"off"
+    }
+}
