@@ -97,5 +97,21 @@ class ContactController {
       throw new AppError(error)
     }
   }
+
+  // Exclui um Telefone pelo ID passado como parametro, retorna o status correspondente.
+  async destroyPhone (request: Request, response: Response): Promise<Response> {
+    const { id } = request.params
+    const contactsService = new ContactsServices()
+
+    try {
+      const isDeleted = await contactsService.destroyPhone(id)
+      if (!isDeleted.affected) {
+        throw new AppError('Não foi Deletado!', 500)
+      }
+      return response.sendStatus(200)
+    } catch (error) {
+      throw new AppError(error)
+    }
+  }
 }
 export default new ContactController()
