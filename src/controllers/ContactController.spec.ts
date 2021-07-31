@@ -75,6 +75,17 @@ describe('ContactController', () => {
         expect(typeof response.body).toBe('object')
       })
   })
+
+  // A rota delete dos telefones deve ter o retorno 200 /contacts passando ID
+  test('Phones delete Route should be return 200 and response if get /contacts with id params', async () => {
+    await testServer.delete('/contacts/phone/1')
+      .set('Accept', 'application/json')
+      .expect(async (response) => {
+        JSON.stringify(response)
+        expect(response.status).toBe(200)
+      })
+  })
+
   // A rota delete dos contatos deve ter o retorno 200 /contacts passando ID
   test('Contacts delete Route should be return 200 and response if get /contacts with id params', async () => {
     await testServer.delete('/contacts/1')
