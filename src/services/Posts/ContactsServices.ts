@@ -163,15 +163,32 @@ class ContactsServices {
 
   async destroy (id: string): Promise<DeleteResult> {
     // Busca no banco o Contato com id do mesmo.
-    const post = await this.contactsRepository.findOne({ id })
+    const contact = await this.contactsRepository.findOne({ id })
     // Se o Contato não existe, retorna status e mensagem de erro.
-    if (!post) {
+    if (!contact) {
       throw new AppError('Contato não Encontrado!', 404)
     }
     // Tenta Excluir no banco o Contato pelo id passado, caso falhe retorna o erro pela instancia de erro "AppError" criada.
     try {
       // Apaga a entidade pelo ID passado e logo após retorna as linhas afetadas no banco para o Controller.
-      const deleted = await this.contactsRepository.delete(post.id)
+      const deleted = await this.contactsRepository.delete(contact.id)
+      return deleted
+    } catch (error) {
+      throw new AppError(error)
+    }
+  }
+
+  async destroyPhone (id: string): Promise<DeleteResult> {
+    // Busca no banco o Telefone com id do mesmo.
+    const phone = await this.phonesRepository.findOne({ id })
+    // Se o Telefone não existe, retorna status e mensagem de erro.
+    if (!phone) {
+      throw new AppError('Telefone não Encontrado!', 404)
+    }
+    // Tenta Excluir no banco o Telefone pelo id passado, caso falhe retorna o erro pela instancia de erro "AppError" criada.
+    try {
+      // Apaga a entidade pelo ID passado e logo após retorna as linhas afetadas no banco para o Controller.
+      const deleted = await this.phonesRepository.delete(phone.id)
       return deleted
     } catch (error) {
       throw new AppError(error)
