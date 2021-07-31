@@ -15,13 +15,34 @@ class ContactsServices {
   }
 
   async store (firstname: string, lastname: string, email: string, phones: string[]): Promise<ContactEntity> {
+    let phoneExists: string[] = []
     // Busca no banco o contato.
     const postAlreadyExists = await this.contactsRepository.findOne({ email })
     // Se ela já existe, retorna status e mensagem de erro.
     if (postAlreadyExists) {
       throw new AppError('Este Email de Contato Já Existe!', 409)
     }
-
+    // Percorre a Array de Telefones verificando cada um no banco
+    await Promise.all(
+      phones.map(async (phone) => {
+        function hasDuplicates (phones: string[]): boolean {
+          return new Set(phones).size !== phones.length
+        }
+        // caso telefones estejam repetidos retorna mensagem e status de erro
+        if (hasDuplicates(phones)) {
+          throw new AppError('Telefones Repetidos!', 409)
+        }
+        // busca no banco o telefone.
+        const phoneCheck = await this.phonesRepository.findOne({ phone })
+        // caso o telefone já exista ele retorna o mesmo.
+        phoneCheck && phoneExists.push(phoneCheck.phone)
+        return phoneExists
+      })
+    )
+    // caso telefone já exista retorna mensagem e status de erro
+    if (phoneExists.length !== 0) {
+      throw new AppError(phoneExists && `Telefone's Já Existem! ${phoneExists}`, 409)
+    }
     // Tenta salvar no banco, caso falhe retorna o erro pela instancia de erro "AppError" criada.
     try {
       // Cria a entidade do Contato.
@@ -30,10 +51,10 @@ class ContactsServices {
       })
       // Salva a entidade no banco.
       const contact = await this.contactsRepository.save(contactData)
-
       // Percorre a Array de Telefones salvando cada um no banco
       await Promise.all(
         phones.map(async (phone) => {
+          // salva o telefone no banco
           const phoneData = this.phonesRepository.create({ phone, contact })
           await this.phonesRepository.save(phoneData)
         })
@@ -42,7 +63,6 @@ class ContactsServices {
       contact.phones = await this.phonesRepository.find({
         contact
       })
-
       // retorna para o controller.
       return contact
     } catch (error) {
@@ -66,7 +86,7 @@ class ContactsServices {
       relations: ['phones']
     })
     // Se os Contatos não forem encontrados, retorna status e mensagem de erro.
-    if (!contacts) {
+    if (contacts.length === 0) {
       throw new AppError('Nenhum Contato Encontrado!', 404)
     }
     // retorna os contatos encontrados ao Controller
@@ -99,7 +119,7 @@ class ContactsServices {
     // Verifica no banco se esse email já existe e caso sim retorna mensagem e erro.
     const emailAlreadyExists = await this.contactsRepository.findOne({ email })
     if (emailAlreadyExists) {
-      throw new AppError('Este Email Já Existe!', 409)
+      throw new AppError('Este Email de Contato Já Existe!', 409)
     }
 
     // Tenta salvar no banco o Contato Atualizado, caso falhe retorna o erro pela instancia de erro "AppError" criada.
@@ -146,7 +166,7 @@ class ContactsServices {
     const post = await this.contactsRepository.findOne({ id })
     // Se o Contato não existe, retorna status e mensagem de erro.
     if (!post) {
-      throw new AppError('Contato não Encontrada!', 404)
+      throw new AppError('Contato não Encontrado!', 404)
     }
     // Tenta Excluir no banco o Contato pelo id passado, caso falhe retorna o erro pela instancia de erro "AppError" criada.
     try {
