@@ -1,0 +1,55 @@
+paths:
+  /contacts/phone/{id}:
+    delete:
+      tags:
+        - 'Phone'
+      summary: Excluir Telefone.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: ID de Telefone.
+      responses:
+        200:
+          description: OK
+        400:
+          description: Erro de Validação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: array
+                    items:
+                      type: string
+                    example:
+                      [
+                        'Id Não Informado!'
+                      ]
+        404:
+          description: Não Encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: array
+                    items:
+                      type: string
+                    example: ['Telefone não Encontrado!']
+        500:
+          description: Erro do Servidor Interno.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: array
+                    items:
+                      type: string
+                    example: ['Não foi Deletado!']
