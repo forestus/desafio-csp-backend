@@ -10,7 +10,7 @@
 
 ## Docker
 
-- caso queira trocar os dados de acesso ao Postres é só trocar no arquivo ".env" dentro da pasta Raiz do Projeto antes de inicializar o banco e consequentemente trocar a configuração da api no "ormconfig.json".
+- caso queira trocar os dados de acesso ao Mysql é só trocar no arquivo ".env" dentro da pasta Raiz do Projeto antes de inicializar o banco e consequentemente trocar a configuração da api no "ormconfig.json".
 
 - caso queira mudar o ambiente de desenvolvimento para produção mude no arquivo docker-compose.yaml o final da tag entrypoint de "entrypoint-dev.sh" para "entrypoint.sh"
 
@@ -27,14 +27,14 @@ comandos para manipulação do PM2 estão no package.json em "scripts", digite "
 
 </br>
 
-comandos para manipulação do Jest estão no package.json em "scripts", digite "test:unit" para rodar para parar a execução digite "CTRL + C" no terminal.
+comandos para manipulação do Jest estão no package.json em "scripts", digite "test:unit" para rodar para parar a execução digite "CTRL + C" no terminal(ao rodar o banco será zerado ao final do comando, caso o banco ja tenha algum dado é provavel que seja necessário rodar novamente os testes).
 
 </br>
 
 ## OBS.:
 
-- Para rodar os commandos é necessário ter nodejs instalado em sua máquina ou acessar o container com o commando "docker exec -it postgresDB bash"
-- Para rodar a aplicação fora do container é necessário ter node instalado na maquina, modificar o ormconfig.json no campo host seu valor para "localhost", voce terá que rodar o container com postgres apenas, vá na pasta raiz e digite "npm run dev" para rodar em desenvolvimento.
+- Para rodar os commandos é necessário ter nodejs instalado em sua máquina ou acessar o container com o commando "docker exec -it mysql bash"
+- Para rodar a aplicação fora do container é necessário ter node instalado na maquina, modificar o ormconfig.json no campo host seu valor para "localhost", voce terá que rodar o container com mysql apenas, vá na pasta raiz e digite "npm run dev" para rodar em desenvolvimento.
 - Para o Eslint funcionar é necessário instalar sua extensão no vscode, para isso acesse "https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint" e adicione o script abaixo ao seu settings.json, para isso no vscode acione o atalho CTRL + SHIFT + P e digite "settings", clique na opção "Preferences: Open Settings (JSON)" e cole o código no JSON.
   </br>
   "editor.codeActionsOnSave": {
