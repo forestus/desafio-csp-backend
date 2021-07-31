@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { AppError } from '@errors/AppError'
-import { ContactsServices } from '@services/Posts/ContactsServices'
+import { ContactsServices } from '@services/Contacts/ContactsServices'
 
 class ContactController {
   // Cria um novo Contato recebendo os dados pelo corpo da requisição, retorna os dados do Contato criado e seu relacionamento com status correspondente.

@@ -1,5 +1,5 @@
 import ContactController from '@controllers/ContactController'
-import ContactValidator from '@services/Posts/ContactValidator'
+import ContactValidator from '@services/Contacts/ContactValidator'
 import { Router } from 'express'
 const router = Router()
 
