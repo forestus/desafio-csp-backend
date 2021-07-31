@@ -1,8 +1,8 @@
 paths:
-  /contacts/{id}:
+  /contacts/phone/{id}:
     put:
       tags:
-        - 'Contact'
+        - 'Phone'
       summary: Atualizar um Telefone.
       parameters:
         - in: path
